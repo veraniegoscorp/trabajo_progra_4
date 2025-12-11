@@ -1,7 +1,9 @@
-from .clase_itemcarrito import item_carrito
+from clase_itemcarrito import item_carrito
 class carrito():
-    def __init__(self, id_carrito, cliente): # type: ignore
-        self.id_carrito = id_carrito
+    def __init__(self,cliente): # type: ignore
+        carrito_actual=1
+        self.id_carrito = carrito_actual
+        carrito_actual+=1
         self.cliente = cliente
         self.items:list['item_carrito'] = []
         self.subtotal = 0.0

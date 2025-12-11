@@ -1,39 +1,57 @@
+import oracledb
+from api.time_api import *
+from bd_crud.crud_carrito import insertar_carrito
+from bd_crud.crud_clientes import *
+from bd_crud.crud_producto import *
 from clases import clase_carrito as carrito_module
 from clases import clase_cliente as cliente_module
 from clases import clase_producto as producto_module
+import time
+ 
 
-import time 
-id_cliente_codigo=1
-id_carrito_actual=1103
 
-#si lo se se que no seria factible en practica pero al igual que en base de datos eso se arregla con un for y un args para que cada que inicie un 
-# cliente se sume uno al contador
-#lo mismo va para el carrito, eso creo que no es parte de la evaluacion asi que esta bien de todos modos :D
-
+#--------------------creacion de productos----------------------------
+#creamos productos
 p1 = producto_module.producto(1, "Café", 2500)
 p2 = producto_module.producto(2, "Pan", 1000)
 p3 = producto_module.producto(3, "te", 500)
-p4 = producto_module.producto(4, "dona", 2500)
-p5 = producto_module.producto(5, "latte", 2000)
-p6 = producto_module.producto(6, "pan_dulce", 1000)
-p7 = producto_module.producto(7, "moka latte", 3000)
-p8 = producto_module.producto(8, "pan japones", 5000)
-p9 = producto_module.producto(9, "pastel de luna", 3500)
-p10 = producto_module.producto(10, "cruassant", 1500)
-
-lista_productos=[p1,p2,p3,p4,p5,p6,p7,p8,p9,p10]
+#insertamos productos en la base de datos
+insertar_producto(p1.codigo, p1.nombre, p1.precio_neto, "activo")
+insertar_producto(p2.codigo, p2.nombre, p2.precio_neto, "activo")
+insertar_producto(p3.codigo, p3.nombre, p3.precio_neto, "activo")
+lista_productos=[p1,p2,p3]
 
 
 
+
+#--------------------registro del cliente----------------------------
 print("hola bienvenido al sistema para registrarse y comprar en kioskofeliz,")
 nombre = input("Nombre del cliente: ")
 email = input("Email del cliente: ")
 rut = input("rut del cliente: ")
 nivel = input("Nivel del cliente (General / estudiante): ")
+password = input("Por favor ingresa una contraseña para tu cuenta: ")
 
-clienteobj=cliente_module.cliente(nombre,email,rut,id_cliente_codigo,nivel)
-carritoobj=carrito_module.carrito(id_carrito_actual,clienteobj)
+#insertamos el cliente en la base de datos
+insertar_cliente(rut, nombre, email, password, nivel,obtener_fecha_api())
+clienteobj=cliente_module.cliente(nombre,email,rut,nivel,password)
 
+
+
+#--------------------creacion del carrito----------------------------
+carritoobj=carrito_module.carrito(clienteobj)
+insertar_carrito(clienteobj.id_cliente,obtener_fecha_api(),carritoobj.subtotal,carritoobj.descuento_aplicado,carritoobj.total)
+
+
+
+
+
+
+
+
+
+
+#
 def inicio():
     while True:
         try:

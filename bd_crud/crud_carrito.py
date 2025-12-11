@@ -1,6 +1,7 @@
 import oracledb
 from conexion_oracle import obtener_conexion
-def insertar_carrito(id_carrito, id_cliente, fecha_creacion, subtotal, descuento_aplicado, total): # type: ignore
+from clases.clase_carrito import carrito
+def insertar_carrito(id_cliente, fecha_creacion, subtotal, descuento_aplicado, total): # type: ignore
     try:
         conexion = obtener_conexion()
         cursor = conexion.cursor() # type: ignore
@@ -22,7 +23,7 @@ def insertar_carrito(id_carrito, id_cliente, fecha_creacion, subtotal, descuento
                 :total
             )
         """, {
-            "id_carrito": id_carrito,
+            "id_carrito": carrito.id_carrito,
             "id_cliente": id_cliente,
             "fecha_creacion": fecha_creacion,
             "subtotal": subtotal,
