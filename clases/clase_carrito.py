@@ -1,16 +1,22 @@
-from clase_itemcarrito import item_carrito
-class carrito():
-    def __init__(self,cliente): # type: ignore
-        carrito_actual=1
-        self.id_carrito = carrito_actual
-        carrito_actual+=1
+from .clase_itemcarrito import item_carrito
+
+# module-level counter for carrito IDs
+_carrito_counter = 1
+
+
+class carrito:
+    def __init__(self, cliente) -> None:  # type: ignore
+        global _carrito_counter
+        self.id_carrito = _carrito_counter
+        _carrito_counter += 1
         self.cliente = cliente
-        self.items:list['item_carrito'] = []
-        self.subtotal = 0.0
-        self.descuento_aplicado = 0.0
-        self.total = 0.0
-    def agregar_items(self,producto,cantidad): # type: ignore
-        item = item_carrito(producto,cantidad) # type: ignore
+        self.items: list[item_carrito] = []
+        self.subtotal: float = 0.0
+        self.descuento_aplicado: float = 0.0
+        self.total: float = 0.0
+
+    def agregar_items(self, producto, cantidad) -> None:  # type: ignore
+        item = item_carrito(producto, cantidad)  # type: ignore
         self.items.append(item)
         self.calcular_subtotales()
 

@@ -1,5 +1,5 @@
 import oracledb
-from conexion_oracle import obtener_conexion
+from .conexion_oracle import obtener_conexion
 def insertar_producto(codigo, nombre, precio_neto,estado): # type: ignore
     try:
         conexion = obtener_conexion()

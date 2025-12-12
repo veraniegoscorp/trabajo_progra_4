@@ -16,9 +16,9 @@ p1 = producto_module.producto(1, "Café", 2500)
 p2 = producto_module.producto(2, "Pan", 1000)
 p3 = producto_module.producto(3, "te", 500)
 #insertamos productos en la base de datos
-insertar_producto(p1.codigo, p1.nombre, p1.precio_neto, "activo")
-insertar_producto(p2.codigo, p2.nombre, p2.precio_neto, "activo")
-insertar_producto(p3.codigo, p3.nombre, p3.precio_neto, "activo")
+#insertar_producto(p1.codigo, p1.nombre, p1.precio_neto, "activo")
+#insertar_producto(p2.codigo, p2.nombre, p2.precio_neto, "activo")
+#insertar_producto(p3.codigo, p3.nombre, p3.precio_neto, "activo")
 lista_productos=[p1,p2,p3]
 
 
@@ -33,14 +33,14 @@ nivel = input("Nivel del cliente (General / estudiante): ")
 password = input("Por favor ingresa una contraseña para tu cuenta: ")
 
 #insertamos el cliente en la base de datos
-insertar_cliente(rut, nombre, email, password, nivel,obtener_fecha_api())
-clienteobj=cliente_module.cliente(nombre,email,rut,nivel,password)
+clienteobj = cliente_module.cliente(nombre, email, rut, nivel, password)
+insertar_cliente(clienteobj.id_cliente, rut, nombre, email, password, nivel, obtener_fecha_api())
 
 
 
 #--------------------creacion del carrito----------------------------
-carritoobj=carrito_module.carrito(clienteobj)
-insertar_carrito(clienteobj.id_cliente,obtener_fecha_api(),carritoobj.subtotal,carritoobj.descuento_aplicado,carritoobj.total)
+carritoobj = carrito_module.carrito(clienteobj)
+insertar_carrito(carritoobj.id_carrito, clienteobj.id_cliente, obtener_fecha_api(), carritoobj.subtotal, carritoobj.descuento_aplicado, carritoobj.total)
 
 
 

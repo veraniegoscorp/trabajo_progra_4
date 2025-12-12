@@ -1,9 +1,30 @@
 import oracledb
-from conexion_oracle import obtener_conexion
+from datetime import datetime
+from .conexion_oracle import obtener_conexion
 from clases.clase_carrito import carrito
-def insertar_carrito(id_cliente, fecha_creacion, subtotal, descuento_aplicado, total): # type: ignore
+
+def insertar_carrito(id_carrito: int, id_cliente: int, fecha_creacion: str, subtotal: float, descuento_aplicado: float, total: float) -> None:
+    conexion = None
+    cursor = None
     try:
+        # Parse fecha string - try multiple formats
+        fecha_dt = None
+        for fmt in ["%Y-%m-%d", "%d/%m/%Y", "%m/%d/%Y"]:
+            try:
+                fecha_dt = datetime.strptime(fecha_creacion, fmt)
+                break
+            except ValueError:
+                continue
+        
+        if fecha_dt is None:
+            print(f"Error: Formato de fecha no reconocido: {fecha_creacion}")
+            return
+        
         conexion = obtener_conexion()
+        if conexion is None:
+            print("Error: No se pudo conectar a la base de datos")
+            return
+        
         cursor = conexion.cursor() # type: ignore
 
         cursor.execute(""" 
@@ -23,9 +44,9 @@ def insertar_carrito(id_cliente, fecha_creacion, subtotal, descuento_aplicado, t
                 :total
             )
         """, {
-            "id_carrito": carrito.id_carrito,
+            "id_carrito": id_carrito,
             "id_cliente": id_cliente,
-            "fecha_creacion": fecha_creacion,
+            "fecha_creacion": fecha_dt,
             "subtotal": subtotal,
             "descuento_aplicado": descuento_aplicado,
             "total": total
@@ -38,8 +59,10 @@ def insertar_carrito(id_cliente, fecha_creacion, subtotal, descuento_aplicado, t
         print(f"Error al insertar carrito: {e}")
 
     finally:
-        cursor.close()
-        conexion.close()
+        if cursor is not None:
+            cursor.close()
+        if conexion is not None:
+            conexion.close()
 
 
 
